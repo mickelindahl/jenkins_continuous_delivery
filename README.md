@@ -1,7 +1,7 @@
 # Jenkins continuous delivey
 
-Instructions for setting up simpe coninuous deleivery for [nodejs](https://nodejs.org/en/) app with
-[jenkins](https://jenkins.io/). 
+Instructions for setting up simpe continuous delivery for [nodejs](https://nodejs.org/en/) app with
+[jenkins (2.3.1)](https://jenkins.io/). 
 
 Steps to setup in jenkins
 * **Test** node test suit 
@@ -10,11 +10,30 @@ Steps to setup in jenkins
 * **Teardown** teardown test deploy environment
 * **Fallback** fallback if test deploy fails
 
+Below is a graph of the continuous delivery flow that we will 
+implement here
 ![](https://github.com/mickelindahl/jenkins_continuous_delivery/blob/master/flow.png)
 
 ## Installation
 
--## Setting up Jenkins to build NodeJS
+Make sure these jenkins plugins are installed.Older versions of plugins
+can be installed manually.
+
+
+* [Clover Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Clover+Plugin) (OBS 4.7 broken choose 4.6 instead)
+* [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
+* [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin)
+* [GitHub Plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin)
+* [Embeddable Build Status PLugin](https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin)
+* [NodeJS Plugin](https://wiki.jenkins-ci.org/display/JENKINS/NodeJS+Plugin)
+* [Parameterized Trigger plugin](https://wiki.jenkins-ci.org/display/JENKINS/Parameterized+Trigger+Plugin)
+* [TAP Plugin](https://wiki.jenkins-ci.org/display/JENKINS/TAP+Plugin)
+* [SSH2Easy plugin](https://wiki.jenkins-ci.org/display/JENKINS/SSH2Easy+Plugin)
+
+### Step 1 - tests with nodejs
+
+
+setting up Jenkins to build NodeJS
  -See NodeJS CI tutorial [part 1](https://strongloop.com/strongblog/roll-your-own-node-js-ci-server-with-jenkins-part-1/) and [part 2](https://strongloop.com/strongblog/roll-your-own-node-js-ci-server-with-jenkins-part-2/) 
  -for the inspiration to this.  
  -
