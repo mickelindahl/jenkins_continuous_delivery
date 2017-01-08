@@ -10,7 +10,7 @@ Steps to setup in jenkins
 * **Teardown** teardown test deploy environment
 * **Fallback** fallback if test deploy fails
 
-
+![](https://github.com/mickelindahl/jenkins_continuous_delivery/blob/master/flow.png)
 
 ## Installation
 
