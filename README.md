@@ -122,7 +122,14 @@ In **Post-build Actions** section click **Add post-build action -> Slack Notific
 perfered notifications. Clicke **Advance**  enter your slackteam in **Team Subdomain**. Add token
 in credentials as secret key. Set your channel in **Project Channel**. Click **Test Connectin**
 
-Save job and your are done!!!
+Save job
+
+### Build badges
+
+Go to Manage jenkins->Configure Global Security and choose Project-based Matrix Authorization Strategy. Under Anonymous user->job check read (view before?!?) status.
+
+In project that you want badge from click **Embeddable Build Status** and copy markdown
+to README.md
 
 ## Github webhook
 Please check [Githu plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+plugin) for 
