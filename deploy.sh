@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. ./env.sh # Source environemnt variables
+# Source environment variables
+. $1/jenkins.env.sh 
 
 # Goto production folder
 cd $PROD_FOLDER/$PROD_NAME

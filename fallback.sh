@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source environemnt variables
-. ./env.sh
+. $1/jenkins.env.sh
 
 # Goto porject
 cd /$PROD_FOLDER/$PROD_NAME

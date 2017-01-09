@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source  environment variables
-. ./env.sh
+. $1/jenkins.env.sh
 
 # Goto test folder
 cd $TEST_FOLDER/$TEST_NAME
@@ -9,7 +9,7 @@ cd $TEST_FOLDER/$TEST_NAME
 # Remove test container and  node modules volume
 docker-compose stop
 docker-compose rm -f
-docker volume rm $NAME"test_node_modules"
+# docker volume rm $NAME"test_node_modules"  #Exclude for a faster builds
 
 # Remove project folder
 cd ..

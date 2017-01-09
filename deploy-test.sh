@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# Surce envirnomnt variables
-. ./env.sh
+# Source environment variables
+
+echo "PROJECT_PATH:"$1
+. $1/jenkins.env.sh
 
 # Create and goto test folder
 mkdir -p $TEST_FOLDER  && cd $TEST_FOLDER
 
-# Clone repo nad chang name
-git clone https://$GIT_ASKPASS@github.com/mickelindahl/$NAME.git
+# Clone repo and change name
+git clone https://$GIT_ASKPASS@github.com/mickelindahl/$GIT_PROJECT.git
 mv $TEST_FOLDER/$PROD_NAME $TEST_FOLDER/$TEST_NAME
 
 # Copy configuration files from production to test 
