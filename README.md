@@ -68,7 +68,7 @@ If you have not configured node save project and do that now (see section **Node
 
 In **Build Environment** section choose **Provide Node & npm/bin folder** and choose prefered node installation
 
-In **BUild** section click **Add build step -> Execute shell** and pased the code below.
+In **Build** section click **Add build step -> Execute shell** and pased the code below.
 
 ```
 npm install
@@ -87,7 +87,7 @@ Alos ensure your project has this entry in `package.json`
 ```
 If ssh have not been configured save project and to that now (see section **SSH remote hell access**
 
-In **Build** section clicl **Add build step -> Remote shell** and past the code below
+In **Build** section click **Add build step -> Remote shell** and past the code below
 
 ```sh
 cd $SRC_PATH
@@ -106,10 +106,8 @@ In **Post-build Actions** section click **Add post-build action -> Publish Clove
 in **Clover report file name**.
 
 In **Post-build Actions** section click **Add post-build action -> Trigger parameterized build on other projects**. 
-Enter `{fallback job name}`in **Projects to bild**. Select Failed in**Trigger wen build is**.
-
-In **Post-build Actions** section click **Add post-build action -> Trigger parameterized build on other projects**. 
-Enter `{fallback job name}`in **Projects to bild**. Select Failed in**Trigger wen build is**.
+Enter `{fallback job name}`in **Projects to bild**. Select Failed in**Trigger wen build is**. Click
+**Add Parameters -> Current build parameters**.
 
 If slack account is missing create one.
 
