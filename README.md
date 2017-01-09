@@ -26,6 +26,7 @@ can be installed manually.
 * [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin)
 * [GitHub Plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin)
 * [Embeddable Build Status PLugin](https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin)
+* [Slack plugin](https://wiki.jenkins-ci.org/display/JENKINS/Slack+Plugin)
 * [NodeJS Plugin](https://wiki.jenkins-ci.org/display/JENKINS/NodeJS+Plugin)
 * [Parameterized Trigger plugin](https://wiki.jenkins-ci.org/display/JENKINS/Parameterized+Trigger+Plugin)
 * [TAP Plugin](https://wiki.jenkins-ci.org/display/JENKINS/TAP+Plugin)
@@ -33,12 +34,28 @@ can be installed manually.
 
 Copy `jenkins.env.sh`   to your soruce directory and open it and set the environment variables in it
 
-Create freestyle job called {project-name}-deploy.sh
+Create two freestyle jobs {project-name}-deploy.sh and {project-name}-fallback.sh
 
-Go into the job and click **Configure**
+For both:
 
-In **General** section click **This project is parameterized -> Add Parameter -> String parameter**  and
-enter name `SRC_PATH` and path to continuous delivery directory. Repeat for `PROJECT_PATH={source project path}`
+* Go into the job and click **Configure**
+
+* In **General** section click **This project is parameterized -> Add Parameter -> String parameter**. 
+  Add tow parameters `SRC_PATH` and `PROJECT_PATH`. Enter default values for deploy job and leave blank
+  for fallback job
+
+### Fallback job
+
+In **Build** section click **Add build step -> Remote shell** and past the code below
+```sh
+cd $SRC_PATH
+. ./teardown.sh
+. ./fallback.s
+```
+
+Save job
+
+### Deploy job
 
 In **Source Doce Management** section click **Git**. Enter project repository ulr and user/password credentials
 for the repository. 
@@ -68,7 +85,44 @@ Alos ensure your project has this entry in `package.json`
     "test-jenkins": "node_modules/.bin/lab -r tap -o test.tap -r clover -o clover.xml test"
   },
 ```
-If you have not cofigured ssh save project and to that now (see section **SSH remote hell access**
+If ssh have not been configured save project and to that now (see section **SSH remote hell access**
+
+In **Build** section clicl **Add build step -> Remote shell** and past the code below
+
+```sh
+cd $SRC_PATH
+. ./deploy-test.sh
+
+cd $SRC_PATH
+. ./teardown.sh
+
+cd $SRC_PATH
+. ./deploy.sh
+```
+In **Post-build Actions** section click **Add post-build action -> Publish TAP result**. Enter `test.tap`
+in **Test results**
+
+In **Post-build Actions** section click **Add post-build action -> Publish Clover  Coverage Report**. Enter `clover.xml`
+in **Clover report file name**.
+
+In **Post-build Actions** section click **Add post-build action -> Trigger parameterized build on other projects**. 
+Enter `{fallback job name}`in **Projects to bild**. Select Failed in**Trigger wen build is**.
+
+In **Post-build Actions** section click **Add post-build action -> Trigger parameterized build on other projects**. 
+Enter `{fallback job name}`in **Projects to bild**. Select Failed in**Trigger wen build is**.
+
+If slack account is missing create one.
+
+If there is no channel on slack to push notifications create one
+
+Create integration in slack to channel. Goto slack apps in your account and serch for jenkns. Click install 
+abd follow instructions.
+
+In **Post-build Actions** section click **Add post-build action -> Slack Notifications**. Click in 
+perfered notifications. Clicke **Advance**  enter your slackteam in **Team Subdomain**. Add token
+in credentials as secret key. Set your channel in **Project Channel**. Click **Test Connectin**
+
+Save job and your are done!!!
 
 ## Github webhook
 Please check [Githu plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+plugin) for 
@@ -104,7 +158,7 @@ From main page goto **Manage Jenkins -> Configure System**.
 In **Node JS** section click add "Add NodeJS", type in name, mark "Install automatically", choose node version and hit save
 at the bottom of the page.
 
-## SSH remote hell access
+## SSH remote shell access
 From main page goto **Manage Jenkins -> Configure System**. 
 
 In **Server Groups Center** section click **add** for **Server Group list**. Enter a groupname, ssh port, user name and
