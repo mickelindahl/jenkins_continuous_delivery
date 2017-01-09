@@ -50,8 +50,8 @@ For both:
 In **Build** section click **Add build step -> Remote shell** and past the code below
 ```sh
 cd $SRC_PATH
-. ./teardown.sh
-. ./fallback.s
+. ./teardown.sh $PROJECT_PATH
+. ./fallback.sh $PROJECT_PATH
 ```
 
 Save job
@@ -92,13 +92,13 @@ In **Build** section click **Add build step -> Remote shell** and past the code 
 
 ```sh
 cd $SRC_PATH
-. ./deploy-test.sh
+. ./deploy-test.sh $PROJECT_PATH
 
 cd $SRC_PATH
-. ./teardown.sh
+. ./teardown.sh $PROJECT_PATH
 
 cd $SRC_PATH
-. ./deploy.sh
+. ./deploy.sh $PROJECT_PATH
 ```
 In **Post-build Actions** section click **Add post-build action -> Publish TAP result**. Enter `test.tap`
 in **Test results**
