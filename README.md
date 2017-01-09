@@ -82,7 +82,7 @@ Alos ensure your project has this entry in `package.json`
 
 ```js
  "scripts": {
-    "test-jenkins": "node_modules/.bin/lab -r tap -o test.tap -r clover -o clover.xml test"
+    "test-jenkins": "node_modules/.bin/lab -l -r tap -o test.tap -r clover -o clover.xml test"
   },
 ```
 If ssh have not been configured save project and to that now (see section **SSH remote hell access**
