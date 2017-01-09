@@ -31,7 +31,87 @@ can be installed manually.
 * [TAP Plugin](https://wiki.jenkins-ci.org/display/JENKINS/TAP+Plugin)
 * [SSH2Easy plugin](https://wiki.jenkins-ci.org/display/JENKINS/SSH2Easy+Plugin)
 
-Create five jenkins freestyle jobs named
+Copy `jenkins.env.sh`   to your soruce directory and open it and set the environment variables in it
+
+Create freestyle job called {project-name}-deploy.sh
+
+Go into the job and click **Configure**
+
+In **General** section click **This project is parameterized -> Add Parameter -> String parameter**  and
+enter name `SRC_PATH` and path to continuous delivery directory. Repeat for `PROJECT_PATH={source project path}`
+
+In **Source Doce Management** section click **Git**. Enter project repository ulr and user/password credentials
+for the repository. 
+
+If you have not configure a Github webhook save project and do that now (see section **Github webhook** below). Then go back.
+
+In **Build Triggers** click **Build when a chnage is pushed to GitHub**
+
+If you have not configured node save project and do that now (see section **Nodejs integration** below. Then go back
+
+In **Build Environment** section choose **Provide Node & npm/bin folder** and choose prefered node installation
+
+In **BUild** section click **Add build step -> Execute shell** and pased the code below.
+
+```
+npm install
+npm run test-jenkins
+
+# Get npm exit status and exit shell accordingly
+rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
+```
+
+Alos ensure your project has this entry in `package.json`
+
+```js
+ "scripts": {
+    "test-jenkins": "node_modules/.bin/lab -r tap -o test.tap -r clover -o clover.xml test"
+  },
+```
+If you have not cofigured ssh save project and to that now (see section **SSH remote hell access**
+
+## Github webhook
+Please check [Githu plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+plugin) for 
+updates to this proceedure.
+
+From main page goto **Manage Jenkins -> Configure System**. 
+
+In **Jenkins Location** section and ensure it is the **http** url of the jenkins server (needs to be http since Lets encryp certidicate at this moment do not pass all githubs tests).
+
+In **GitHub** sectin and click **add GitHub server**. 
+
+Goto github and in your account go to **Settings"->"Personal access tokens**. Generate an token and copy token.
+
+Create personal access token under settings in your github account. It
+should adleast have the folloing scope so that jenkins can manage creation
+of repo hooks.
+* admin:repo_hook - for managing hooks (read, write and delete old ones)
+* repo - to see private repos
+* repo:status - to manipulate commit statuses
+If private one need to also add
+* admin:public_key
+* admin:org_hook
+
+Choose/add credentials with secret thext that equals the personal access.
+
+Test connection. If ok scroll to bottom and hit save.   
+
+## Nodejs integration
+Ensure that Node JS plugin is installed.
+
+From main page goto **Manage Jenkins -> Configure System**. 
+
+In **Node JS** section click add "Add NodeJS", type in name, mark "Install automatically", choose node version and hit save
+at the bottom of the page.
+
+## SSH remote hell access
+From main page goto **Manage Jenkins -> Configure System**. 
+
+In **Server Groups Center** section click **add** for **Server Group list**. Enter a groupname, ssh port, user name and
+password. Then click **add** for **Server List** and select the server group from above a server name and 
+enter server url. 
+
+Save configuration and you are done!
 
 ### Step 1 - tests with nodejs
 
