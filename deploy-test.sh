@@ -34,6 +34,7 @@ sed -i 's/\-\s\.\/postgres\/data/\#/g' docker-compose.yml
 mkdir -p postgres/dumpall
 
 # Build and deploy
-docker-compose build --no-cache
+#docker-compose build --no-cache
+docker-compose build # Faster builds
 docker-compose up -d
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-export GIT_PROJECT=greendrive
+export GIT_PROJECT=stake
 export TEST_FOLDER=/opt/apps/test
 export PROD_FOLDER=/opt/apps
-export PROD_NAME=greendrive
+export PROD_NAME=stake
+
 TEST_NAME=$PROD_NAME"_test"
 export TEST_NAME
 
