@@ -42,15 +42,17 @@ For both:
 * Go into the job and click **Configure**
 
 * In **General** section click **This project is parameterized -> Add Parameter -> String parameter**. 
-  Add tow parameters `SRC_PATH` and `PROJECT_PATH`. Enter default values for deploy job and leave blank
+  Add tow parameters `CD_PATH` and `PROJECT_PATH`. Enter default values for deploy job and leave blank
   for fallback job
 
 ### Fallback job
 
 In **Build** section click **Add build step -> Remote shell** and past the code below
 ```sh
-cd $SRC_PATH
+cd $CD_PATH
 . ./teardown.sh $PROJECT_PATH
+
+cd $CD_PATH
 . ./fallback.sh $PROJECT_PATH
 ```
 
@@ -91,13 +93,13 @@ If ssh have not been configured save project and to that now (see section **SSH 
 In **Build** section click **Add build step -> Remote shell** and past the code below
 
 ```sh
-cd $SRC_PATH
+cd $CD_PATH
 . ./deploy-test.sh $PROJECT_PATH
 
-cd $SRC_PATH
+cd $CD_PATH
 . ./teardown.sh $PROJECT_PATH
 
-cd $SRC_PATH
+cd $CD_PATH
 . ./deploy.sh $PROJECT_PATH
 ```
 In **Post-build Actions** section click **Add post-build action -> Publish TAP result**. Enter `test.tap`
