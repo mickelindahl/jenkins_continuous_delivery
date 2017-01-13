@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Source environment variables
@@ -11,5 +12,6 @@ git pull origin master
 
 # Deploy in container
 docker-compose stop
+docker volume rm $PROD_NAME
 docker-compose build --no-cache
 docker-compose up -d
