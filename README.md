@@ -27,6 +27,7 @@ can be installed manually.
 * [GitHub Plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin)
 * [EnvInject Plugin](https://wiki.jenkins-ci.org/display/JENKINS/EnvInject+Plugin) (to show enviromnet variables for builds)
 * [Embeddable Build Status PLugin](https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin)
+* [HTTP Request](https://wiki.jenkins-ci.org/display/JENKINS/HTTP+Request+Plugin) 
 * [Slack plugin](https://wiki.jenkins-ci.org/display/JENKINS/Slack+Plugin)
 * [NodeJS Plugin](https://wiki.jenkins-ci.org/display/JENKINS/NodeJS+Plugin)
 * [Parameterized Trigger plugin](https://wiki.jenkins-ci.org/display/JENKINS/Parameterized+Trigger+Plugin)
@@ -101,7 +102,12 @@ cd $CD_PATH
 
 cd $CD_PATH
 . ./deploy.sh $PROJECT_PATH
+
+# Wait for server to get online
+sleep 10
 ```
+In **Build** sectopm click **HTTP Request**. Enter url for site page to test request against.
+
 In **Post-build Actions** section click **Add post-build action -> Publish TAP result**. Enter `test.tap`
 in **Test results**
 
