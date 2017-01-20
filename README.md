@@ -10,6 +10,8 @@ Steps to setup in jenkins
 * **Teardown** teardown test deploy environment
 * **Fallback** fallback if test deploy fails
 
+This is done with two freestyle scripts deply and fallback.
+
 Below is a graph of the continuous delivery flow that we will 
 implement here
 
