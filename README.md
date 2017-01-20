@@ -78,6 +78,12 @@ In **Build Environment** section choose **Provide Node & npm/bin folder** and ch
 
 In **Build** section click **Add build step -> Execute shell** and pased the code below.
 
+OBS for node-gyp, add node-gyp as global package and also ensure that
+make is installed in jenkins container. Enter container as root 
+`docker exec -it jenkins --user root /bin/bash` and run`apt-get install build-essential`
+
+
+
 ```
 npm install
 npm run test-jenkins
