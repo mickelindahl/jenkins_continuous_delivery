@@ -3,22 +3,8 @@
 Instructions for setting up simpe continuous delivery for [nodejs](https://nodejs.org/en/) app with
 [jenkins (2.3.1)](https://jenkins.io/). 
 
-Freestyle jobs to setup in jenkins
-* **deploy** node test suit 
-* **fallback** test deploy in dev/prod server
-
-Tha utilized the script files
-* **Test** node test suit 
-* **Deploy test** test deploy in dev/prod server
-* **Deploy** deploy to production
-* **Teardown** teardown test deploy environment
-* **Fallback** fallback if test deploy fails
-
-This is done with two freestyle scripts deply and fallback.
-
-Below is a graph of the continuous delivery flow that we will 
-implement here
-
+The continuous delivery flow below will be implemented here
+using two jenkins fresyle jobs.
 
 ![](https://github.com/mickelindahl/jenkins_continuous_delivery/blob/master/flow.png)
 
