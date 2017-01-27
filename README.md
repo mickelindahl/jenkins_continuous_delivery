@@ -4,7 +4,7 @@ Instructions for setting up simpe continuous delivery for [nodejs](https://nodej
 [jenkins (2.3.1)](https://jenkins.io/). 
 
 The continuous delivery flow below will be implemented here
-using two jenkins fresyle jobs.
+using two jenkins frestyle jobs.
 
 ![](https://github.com/mickelindahl/jenkins_continuous_delivery/blob/master/flow.png)
 
