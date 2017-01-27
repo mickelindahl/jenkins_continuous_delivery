@@ -47,7 +47,7 @@ For both:
 * In **General** section click **This project is parameterized -> Add Parameter -> String parameter**. 
   Add tow parameters `CD_PATH` and `PROJECT_PATH`. Enter default 
   values for deploy job and leave blank for fallback job
-* In **General** section click **This project is parameterized -> Add Parameter -> Password parameter**. 
+* [optional] In **General** section click **This project is parameterized -> Add Parameter -> Password parameter**. 
   Add `GIT_TOKEN` (git personal token with repo rights for private repositories). Enter default 
   values for deploy job and leave blank for fallback job. 
 
