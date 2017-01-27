@@ -3,7 +3,11 @@
 Instructions for setting up simpe continuous delivery for [nodejs](https://nodejs.org/en/) app with
 [jenkins (2.3.1)](https://jenkins.io/). 
 
-Steps to setup in jenkins
+Freestyle jobs to setup in jenkins
+* **deploy** node test suit 
+* **fallback** test deploy in dev/prod server
+
+Tha utilized the script files
 * **Test** node test suit 
 * **Deploy test** test deploy in dev/prod server
 * **Deploy** deploy to production
