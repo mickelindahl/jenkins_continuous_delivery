@@ -3,6 +3,7 @@
 # Source  environment variables
 . $1/jenkins.env.sh
 
+# Skip if deploy test directory has not been created
 if [ ! -d "$TEST_FOLDER/$TEST_NAME" ]; then
   # Control will enter here if $DIRECTORY doesn't exist.
   exit 0
