@@ -9,7 +9,7 @@ echo "Creating and entering test folder:"$TEST_FOLDER
 mkdir -p $TEST_FOLDER  && cd $TEST_FOLDER
 
 echo "Cloning repo"
-git clone https://$GIT_ASKPASS@github.com/mickelindahl/$GIT_PROJECT.git
+git clone https://$GIT_PRESONAL_ACCESS_TOKEN@github.com/mickelindahl/$GIT_PROJECT.git
 
 echo "Rename repo "$TEST_FOLDER/$PROD_NAME" -> "$TEST_FOLDER/$TEST_NAME
 mv $TEST_FOLDER/$PROD_NAME $TEST_FOLDER/$TEST_NAME
