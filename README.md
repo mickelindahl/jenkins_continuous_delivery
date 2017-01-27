@@ -47,7 +47,7 @@ For both:
 echo $GIT_TOKEN
 ```
 Make `git_askpass.sh` executable `chmod -x git_askpass.sh` and set environment 
-variable `GIT_ASKPAS={path to file}/git_askpass.sh`. Not the `GIT_TOKENF` will
+variable `GIT_ASKPASS={path to file}/git_askpass.sh`. Not the `GIT_TOKEN` will
 be used by git when prompted form password. For reference see 
 [git credentials](https://git-scm.com/docs/gitcredentials) and 
 [npm install](https://docs.npmjs.com/cli/install). 
