@@ -13,7 +13,7 @@ using two jenkins frestyle jobs.
 Make sure these jenkins plugins are installed.Older versions of plugins
 can be installed manually.
 
-* [Clover Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Clover+Plugin) (OBS 4.7 broken choose 4.6 instead)
+* [Clover Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Clover+Plugin)
 * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
 * [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin)
 * [GitHub Plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin)
