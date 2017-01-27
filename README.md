@@ -137,7 +137,7 @@ cd $CD_PATH
 # Wait for server to get online
 sleep 10
 ```
-In **Build** sectopm click **HTTP Request**. Enter url for site page to test request against.
+In **Build** section click **HTTP Request**. Enter url for site page to test request against.
 
 In **Post-build Actions** section click **Add post-build action -> Publish TAP result**. Enter `test.tap`
 in **Test results**
