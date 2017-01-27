@@ -202,3 +202,31 @@ password. Then click **add** for **Server List** and select the server group fro
 enter server url. 
 
 Save configuration and you are done!
+
+## GIT_ASKPASS on linux with ksshaskpass
+
+[Ksshaskpass](https://linux.die.net/man/1/ksshaskpass) 
+can be used on linus systems to store passwords. For private 
+packages dependencies installed with **git+https** and user **x-oauth-basic**
+that accepts a 
+[git personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) 
+as password.
+
+```
+scripts:{
+   "a-package": "git+https://x-oauth-basic@github.com/{user}/a_package.git"
+   }
+```
+The path to `ksshaskpass` can be set in `GIT_ASKPASS`which tells
+git to run the program when a passoword is prompted. Fist time
+ksshaskpass will trigger a dialog where the personal access token 
+can be entered. From there on this value will be used automatically 
+and no more password request will be triggered. The stored passord 
+can be edited using `kwalletmanager`
+
+```
+GIT_ASKPASS=/usr/bin/ksshaskpass
+``` 
+To find location of ksshaskpass run `which ksshaskpass`.
+
+
