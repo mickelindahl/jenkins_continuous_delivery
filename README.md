@@ -36,7 +36,7 @@ can be installed manually.
 * [TAP Plugin](https://wiki.jenkins-ci.org/display/JENKINS/TAP+Plugin)
 * [SSH2Easy plugin](https://wiki.jenkins-ci.org/display/JENKINS/SSH2Easy+Plugin)
 
-Copy `jenkins.env.sh`   to your soruce directory and open it and set the environment variables in it
+Copy `jenkins.env.sh` to your soruce directory and open it and set the environment variables in it
 
 Create two freestyle jobs {project-name}-deploy.sh and {project-name}-fallback.sh
 
@@ -45,8 +45,22 @@ For both:
 * Go into the job and click **Configure**
 
 * In **General** section click **This project is parameterized -> Add Parameter -> String parameter**. 
-  Add tow parameters `CD_PATH` and `PROJECT_PATH`. Enter default values for deploy job and leave blank
-  for fallback job
+  Add tow parameters `CD_PATH` and `PROJECT_PATH`. Enter default 
+  values for deploy job and leave blank for fallback job
+* In **General** section click **This project is parameterized -> Add Parameter -> Password parameter**. 
+  Add `GIT_TOKEN` (git personal token with repo rights for private repositories). Enter default 
+  values for deploy job and leave blank for fallback job. 
+
+**Note:** `GIT_TOKEN` is use to put in a shell for `GIT_ASKPASS`. Create `git_askpass.sh`
+```
+#! /bin/bash
+echo $GIT_TOKEN
+```
+Make `git_askpass.sh` executable `chmod -x git_askpass.sh` and set environment 
+variable `GIT_ASKPAS={path to file}/git_askpass.sh`. Not the `GIT_TOKENF` will
+be used by git when prompted form password. For reference see 
+[git credentials](https://git-scm.com/docs/gitcredentials) and 
+[npm install](https://docs.npmjs.com/cli/install). 
 
 ### Fallback job
 
@@ -82,9 +96,17 @@ OBS for node-gyp, add node-gyp as global package and also ensure that
 make is installed in jenkins container. Enter container as root 
 `docker exec -it jenkins --user root /bin/bash` and run`apt-get install build-essential`
 
-
-
+[optional]
 ```
+# Create GIT_ASKPASS shell script that provides
+# gitub personal token to npm install.
+echo "#/bin/bash" > test.sh && echo "echo "$GIT_TOKEN >> git_askpass.sh
+export GIT_ASKPASS=$PWD"/git_askpass.sh"
+chmod +x git_askpass.sh
+```
+[required]
+```
+# Install and test
 npm install
 npm run test-jenkins
 
