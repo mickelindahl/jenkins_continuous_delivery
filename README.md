@@ -229,4 +229,8 @@ GIT_ASKPASS=/usr/bin/ksshaskpass
 ``` 
 To find location of ksshaskpass run `which ksshaskpass`.
 
+Then run `npm install` and when prompted for password enter the 
+personal access token an you are done. From here on you will not
+be prompted for a password for user x-oauth-basic :)
+
 
