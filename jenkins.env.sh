@@ -3,7 +3,6 @@ export GIT_PROJECT=greendrive
 export TEST_FOLDER=/opt/apps/test
 export PROD_FOLDER=/opt/apps
 export PROD_NAME=greendrive
-export GIT_ASKPASS=/opt/apps/git_askpass.sh
 
 TEST_NAME=$PROD_NAME"_test"
 export TEST_NAME
