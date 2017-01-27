@@ -206,11 +206,11 @@ Save configuration and you are done!
 ## GIT_ASKPASS on linux with ksshaskpass
 
 [Ksshaskpass](https://linux.die.net/man/1/ksshaskpass) 
-can be used on linus systems to store passwords. For private 
+can be used on linux systems to store passwords. It can be setup such that private 
 packages dependencies installed with **git+https** and user **x-oauth-basic**
 that accepts a 
 [git personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) 
-as password.
+as password can be installed without a password prompt when running `npm install`..
 
 ```
 scripts:{
