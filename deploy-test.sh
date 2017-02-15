@@ -42,7 +42,7 @@ echo "Create the dumpall directory"
 mkdir -p postgres/dumpall
 
 echo "Build and deploy"
-docker-compose build --no-cache
-#docker-compose build # Faster builds, seems not to be true, or not...
+#docker-compose build --no-cache
+docker-compose build # Faster builds, seems not to be true, or not...
 docker-compose up -d
 
