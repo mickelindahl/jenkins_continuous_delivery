@@ -3,16 +3,8 @@
 Instructions for setting up simpe continuous delivery for [nodejs](https://nodejs.org/en/) app with
 [jenkins (2.3.1)](https://jenkins.io/). 
 
-Steps to setup in jenkins
-* **Test** node test suit 
-* **Deploy test** test deploy in dev/prod server
-* **Deploy** deploy to production
-* **Teardown** teardown test deploy environment
-* **Fallback** fallback if test deploy fails
-
-Below is a graph of the continuous delivery flow that we will 
-implement here
-
+The continuous delivery flow below will be implemented here
+using two jenkins frestyle jobs.
 
 ![](https://github.com/mickelindahl/jenkins_continuous_delivery/blob/master/flow.png)
 
@@ -21,19 +13,20 @@ implement here
 Make sure these jenkins plugins are installed.Older versions of plugins
 can be installed manually.
 
-* [Clover Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Clover+Plugin) (OBS 4.7 broken choose 4.6 instead)
+* [Clover Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Clover+Plugin)
 * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
 * [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin)
 * [GitHub Plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin)
-* [EnvInject Plugin](https://wiki.jenkins-ci.org/display/JENKINS/EnvInject+Plugin) (to show enviromnet variables for builds)
+* [Environment Injector Plugin](https://wiki.jenkins-ci.org/display/JENKINS/EnvInject+Plugin) (to show environmet variables for builds)
 * [Embeddable Build Status PLugin](https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin)
-* [Slack plugin](https://wiki.jenkins-ci.org/display/JENKINS/Slack+Plugin)
+* [HTTP Request](https://wiki.jenkins-ci.org/display/JENKINS/HTTP+Request+Plugin) (to test that server is responding to requests)
+* [Slack Notification plugin](https://wiki.jenkins-ci.org/display/JENKINS/Slack+Plugin)
 * [NodeJS Plugin](https://wiki.jenkins-ci.org/display/JENKINS/NodeJS+Plugin)
 * [Parameterized Trigger plugin](https://wiki.jenkins-ci.org/display/JENKINS/Parameterized+Trigger+Plugin)
 * [TAP Plugin](https://wiki.jenkins-ci.org/display/JENKINS/TAP+Plugin)
 * [SSH2Easy plugin](https://wiki.jenkins-ci.org/display/JENKINS/SSH2Easy+Plugin)
 
-Copy `jenkins.env.sh`   to your soruce directory and open it and set the environment variables in it
+Copy `jenkins.env.sh` to your soruce directory and open it and set the environment variables in it
 
 Create two freestyle jobs {project-name}-deploy.sh and {project-name}-fallback.sh
 
@@ -42,10 +35,26 @@ For both:
 * Go into the job and click **Configure**
 
 * In **General** section click **This project is parameterized -> Add Parameter -> String parameter**. 
-  Add tow parameters `CD_PATH` and `PROJECT_PATH`. Enter default values for deploy job and leave blank
-  for fallback job
+  Add tow parameters `CD_PATH` and `PROJECT_PATH`. Enter default 
+  values for deploy job and leave blank for fallback job
+* [optional] In **General** section click **This project is parameterized -> Add Parameter -> Password parameter**. 
+  Add `GIT_TOKEN` (git personal token with repo rights for private repositories). Enter default 
+  values for deploy job and leave blank for fallback job. 
+
+**Note:** `GIT_TOKEN` is use to put in a shell for `GIT_ASKPASS`. Create `git_askpass.sh`
+```
+#! /bin/bash
+echo $GIT_TOKEN
+```
+Make `git_askpass.sh` executable `chmod -x git_askpass.sh` and set environment 
+variable `GIT_ASKPASS={path to file}/git_askpass.sh`. Not the `GIT_TOKEN` will
+be used by git when prompted form password. For reference see 
+[git credentials](https://git-scm.com/docs/gitcredentials) and 
+[npm install](https://docs.npmjs.com/cli/install). 
 
 ### Fallback job
+
+If ssh have not been configured save project and to that now (see section **SSH remote shell access**
 
 In **Build** section click **Add build step -> Remote shell** and past the code below
 ```sh
@@ -60,12 +69,12 @@ Save job
 
 ### Deploy job
 
-In **Source Doce Management** section click **Git**. Enter project repository ulr and user/password credentials
+In **Source Code Management** section click **Git**. Enter project repository ulr and user/password credentials
 for the repository. 
 
 If you have not configure a Github webhook save project and do that now (see section **Github webhook** below). Then go back.
 
-In **Build Triggers** click **Build when a chnage is pushed to GitHub**
+In **Build Triggers** click **GitHub hook trigger for GITScm polling**
 
 If you have not configured node save project and do that now (see section **Nodejs integration** below. Then go back
 
@@ -73,7 +82,21 @@ In **Build Environment** section choose **Provide Node & npm/bin folder** and ch
 
 In **Build** section click **Add build step -> Execute shell** and pased the code below.
 
+OBS for node-gyp, add node-gyp as global package and also ensure that
+make is installed in jenkins container. Enter container as root 
+`docker exec -it jenkins --user root /bin/bash` and run`apt-get install build-essential`
+
+[optional]
 ```
+# Create GIT_ASKPASS shell script that provides
+# gitub personal token to npm install.
+echo "#/bin/bash" > test.sh && echo "echo "$GIT_TOKEN >> git_askpass.sh
+export GIT_ASKPASS=$PWD"/git_askpass.sh"
+chmod +x git_askpass.sh
+```
+[required]
+```
+# Install and test
 npm install
 npm run test-jenkins
 
@@ -88,7 +111,6 @@ Alos ensure your project has this entry in `package.json`
     "test-jenkins": "node_modules/.bin/lab -l -r tap -o test.tap -r clover -o clover.xml test"
   },
 ```
-If ssh have not been configured save project and to that now (see section **SSH remote hell access**
 
 In **Build** section click **Add build step -> Remote shell** and past the code below
 
@@ -101,22 +123,27 @@ cd $CD_PATH
 
 cd $CD_PATH
 . ./deploy.sh $PROJECT_PATH
+
+# Wait for server to get online
+sleep 10
 ```
+In **Build** section click **HTTP Request**. Enter url for site page to test request against.
+
 In **Post-build Actions** section click **Add post-build action -> Publish TAP result**. Enter `test.tap`
 in **Test results**
 
-In **Post-build Actions** section click **Add post-build action -> Publish Clover  Coverage Report**. Enter `clover.xml`
+In **Post-build Actions** section click **Add post-build action -> Publish Clover Coverage Report**. Enter `clover.xml`
 in **Clover report file name**.
 
 In **Post-build Actions** section click **Add post-build action -> Trigger parameterized build on other projects**. 
-Enter `{fallback job name}`in **Projects to bild**. Select Failed in**Trigger wen build is**. Click
+Enter `{fallback job name}`in **Projects to build**. Select Failed in**Trigger wen build is**. Click
 **Add Parameters -> Current build parameters**.
 
 If slack account is missing create one.
 
 If there is no channel on slack to push notifications create one
 
-Create integration in slack to channel. Goto slack apps in your account and serch for jenkns. Click install 
+Create integration in slack to channel. Goto slack apps in your account and search for jenkns. Click install 
 abd follow instructions.
 
 In **Post-build Actions** section click **Add post-build action -> Slack Notifications**. Click in 
@@ -161,9 +188,10 @@ Test connection. If ok scroll to bottom and hit save.
 ## Nodejs integration
 Ensure that Node JS plugin is installed.
 
-From main page goto **Manage Jenkins -> Configure System**. 
+From main page goto **Manage Jenkins -> Global Tool Configuration**. 
 
-In **Node JS** section click add "Add NodeJS", type in name, mark "Install automatically", choose node version and hit save
+In **Node JS** section click add "Add NodeJS", type in name, mark **Install automatically**, 
+click **Add installer -> Install from nodejs.com** choose node version and hit save
 at the bottom of the page.
 
 ## SSH remote shell access
@@ -175,104 +203,34 @@ enter server url.
 
 Save configuration and you are done!
 
-### Step 1 - tests with nodejs
+## GIT_ASKPASS on linux with ksshaskpass
 
+[Ksshaskpass](https://linux.die.net/man/1/ksshaskpass) 
+can be used on linux systems to store passwords. It can be setup such that private 
+packages dependencies installed with **git+https** and user **x-oauth-basic**
+that accepts a 
+[git personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) 
+as password can be installed without a password prompt when running `npm install`..
 
-setting up Jenkins to build NodeJS
- -See NodeJS CI tutorial [part 1](https://strongloop.com/strongblog/roll-your-own-node-js-ci-server-with-jenkins-part-1/) and [part 2](https://strongloop.com/strongblog/roll-your-own-node-js-ci-server-with-jenkins-part-2/) 
- -for the inspiration to this.  
- -
-
-
-## Seting up nodejs
-### Plugins 
- -
- -Required
- * GitHub  Plugin
- * NodeJS Plugin
- 
- Optional
- * Clover Plugin (OBS 4.7 broken choose 4.6 instead)
- * Checkstyle Plug-in
- * TAP Plugin
- * Embeddable Build Status PLugin
- 
- Older versions of plugins can be manually installed.
- 
- ### Security
- Go to "Manage jenkins" -> "Configure Global Security", choose "Project-based Matrix Authorization Strategy".
- and then add you user and check admin.
- 
- ### Github webhok
- Please check [Githu plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+plugin) for 
- updates to this proceedure.
- 
- Create personal access token under settings in your github account. It
- should adleast have the folloing scope so that jenkins can manage creation
- of repo hooks.
- * admin:repo_hook - for managing hooks (read, write and delete old ones)
- * repo - to see private repos
- * repo:status - to manipulate commit statuses
- If private one need to also add
- * admin:public_key
- * admin:org_hook
- 
-Go to "Manage Jenkins" -> "Configure System". First scroll down to Jenkins locatin and ensure it is the **http** url of the jenkins server (needs to be http since Lets encryp certidicate at this moment do not pass all githubs tests). 
-Then scroll down to GitHub and click add GitHub server.  
-
-In your github account go to "Settings"->"Personal access tokens", generate an token and copy token.
-
-Click "Add credentials" -> "jenkins" (the scope), choose kind  <<sercet text>> and past token value. Type in
-a suitable ID and description (Credentials can also be added at main page. There can additional scopes also be created).
-
-Test connection. If ok scroll to bottom and hit save.    
-
-### Node JS
-Ensure that Node JS plugin is installed.
-
-Under "Manage Jenkins" -> "Global Tool Configuration" scroll down to Node JS.
-
-Click add "Add NodeJS", type in name, mark "Install automatically", choose node version and hit save
-at the bottom of the page.
-
-### Build badges
-Go to Manage jenkins->Configure Global Security and choose Project-based Matrix Authorization Strategy.
-Under Anonymous user->job check read (view before?!?) status.
-  
-## Free-style project Node JS
-Select "New item", enter a name, choose "Freestyle project" and then hit OK.
-
-Go to "Configure" 
-
-Under "Source Code Managment" check "Git". Enter git
-repository url and credentials (credentials need to be a user/password type).
-
-Under "Build Triggers" check "Build when a change is pushed to GitHub". OBS if
-you need to delete the webhook on git to generate a new since you change e.g. the url of the jenins server 
-just uncheck->apply->check->apply. Alos if you have a webhoo that failed you need to delete it before
-a new can be populated.
- 
- 
-Under "Build Environment" check "Provide Node & npm bin/folder to PATH and choose your nore installtion. 
-
-### TAP build status and Clover coverage report with hapijs lab
-
-In your package,json add
-
-```js
-"scripts": {
-    "test-jenkins": "node_modules/.bin/lab -m 10000 -r tap -o test.tap -r clover -o clover.xml"
-}
 ```
-Then in jenkins got to "Configure" -> "Build" -> "Add build step" -> "Excecute in shell" and past:
-
-```shell
-npm install
-npm run test-jenkins || :
+scripts:{
+   "a-package": "git+https://x-oauth-basic@github.com/{user}/a_package.git"
+   }
 ```
+The path to `ksshaskpass` can be set in `GIT_ASKPASS`which tells
+git to run the program when a passoword is prompted. Fist time
+ksshaskpass will trigger a dialog where the personal access token 
+can be entered. From there on this value will be used automatically 
+and no more password request will be triggered. The stored passord 
+can be edited using `kwalletmanager`
 
-Then goto "Post-build Actions" -> "Add post-build action" and choose  "Publish TAP Results" and "Publish Clover Coverage Report"
-  
-In "Publish TAP Results" -> "Test results" write test.tap
- 
-Hit save and try it out with "Build now"!
+```
+GIT_ASKPASS=/usr/bin/ksshaskpass
+``` 
+To find location of ksshaskpass run `which ksshaskpass`.
+
+Then run `npm install` and when prompted for password enter the 
+personal access token an you are done. From here on you will not
+be prompted for a password for user x-oauth-basic :)
+
+
