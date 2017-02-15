@@ -2,14 +2,14 @@
 
 # Source environment variables
 
-echo "PROJECT_PATH:"$1
+echo "PROJECT_PATH: . $1/jenkins.env.sh"
 . $1/jenkins.env.sh
 
 echo "Creating and entering test folder:"$TEST_FOLDER
 mkdir -p $TEST_FOLDER  && cd $TEST_FOLDER
 
-echo "Cloning repo git clone https://$GIT_PRESONAL_ACCESS_TOKEN@github.com/mickelindahl/$GIT_PROJECT.git"
-git clone https://$GIT_PRESONAL_ACCESS_TOKEN@github.com/mickelindahl/$GIT_PROJECT.git
+echo "Cloning repo git clone https://$GIT_PERSONAL_ACCESS_TOKEN@github.com/mickelindahl/$GIT_PROJECT.git"
+git clone https://$GIT_PERSONAL_ACCESS_TOKEN@github.com/mickelindahl/$GIT_PROJECT.git
 
 echo "Rename repo "$TEST_FOLDER/$PROD_NAME" -> "$TEST_FOLDER/$TEST_NAME
 mv $TEST_FOLDER/$PROD_NAME $TEST_FOLDER/$TEST_NAME
@@ -21,7 +21,6 @@ echo "Copy file docker-compose.yml to "$TEST_FOLDER/$TEST_NAME
 cp docker-compose.yml $TEST_FOLDER/$TEST_NAME
 
 echo "Copy file Dockerfile to "$TEST_FOLDER/$TEST_NAME
-more Docke file
 cp Dockerfile $TEST_FOLDER/$TEST_NAME
 
 echo "Copy file .env to "$TEST_FOLDER/$TEST_NAME
