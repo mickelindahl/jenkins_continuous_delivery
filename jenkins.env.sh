@@ -9,13 +9,7 @@ export TEST_NAME
 
 # Grep git askpass token from docker-compose.yml and make available
 GIT_PERSONAL_ACCESS_TOKEN_LINE=$(grep -i 'GIT_PERSONAL_ACCESS_TOKEN' $PROD_FOLDER/$PROD_NAME/docker-compose.yml)
-
-echo $GIT_PERSONAL_ACCESS_TOKEN_LINE
 GIT_PERSONAL_ACCESS_TOKEN=${GIT_PERSONAL_ACCESS_TOKEN_LINE##*:} # Get token
-
-echo $GIT_PERSONAL_ACCESS_TOKEN
 GIT_PERSONAL_ACCESS_TOKEN="$(echo -e "${GIT_PERSONAL_ACCESS_TOKEN}" | tr -d '[:space:]')"
-
-echo $GIT_PERSONAL_ACCESS_TOKEN
 
 export GIT_PERSONAL_ACCESS_TOKEN
