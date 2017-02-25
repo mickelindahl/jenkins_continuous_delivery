@@ -98,6 +98,11 @@ chmod +x git_askpass.sh
 ```
 # Install and test
 npm install
+
+# Need to force installtion of packages fetched direct from github 
+#npm install {package]
+
+
 npm run test-jenkins
 
 # Get npm exit status and exit shell accordingly
