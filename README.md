@@ -188,7 +188,19 @@ If private one need to also add
 
 Choose/add credentials with secret thext that equals the personal access.
 
-Test connection. If ok scroll to bottom and hit save.   
+Test connection. 
+
+**Click Advance** and mark **Specify another hook url for GitHub configuration**
+
+copy `https://jenkins.grassy.se/github-webhook/` and go to repository/s that should have
+a webhook. Click setting -> Integrations & Services -> Add Service
+Search for Jenkins (Github) and press enter
+Att jenkins git-webkooh url
+
+Go back to jenkins
+
+If ok scroll to bottom and hit save.   
+
 
 ## Nodejs integration
 Ensure that Node JS plugin is installed.
